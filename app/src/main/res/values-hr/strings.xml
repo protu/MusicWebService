@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MusicWebService</string>
     <string name="no_content_yet">Ovjde još nema ništa</string>
+    <string name="please_enter_search_string">Molim, upišite tekst pretrage</string>
+    <string name="enter_search_string">Upišite tekst za pretraživanje</string>
+    <string name="no_match">Nema rezultata</string>
+    <string name="records_found">Broj pronađenih zapisa</string>
 </resources>

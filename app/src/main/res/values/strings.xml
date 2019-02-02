@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">MusicWebService</string>
+    <string name="app_name" translatable="false">Playlist Creator</string>
     <string name="no_content_yet">No content yet!</string>
+    <string name="please_enter_search_string">Please enter search string!</string>
+    <string name="enter_search_string">Enter search string</string>
+    <string name="no_match">No match</string>
+    <string name="records_found">Records found</string>
 </resources>
