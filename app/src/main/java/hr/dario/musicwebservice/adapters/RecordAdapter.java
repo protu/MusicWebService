@@ -3,6 +3,7 @@ package hr.dario.musicwebservice.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +67,13 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
         List<ArtistCredit> artistList = recording.getArtistCredit();
         StringBuilder sbArtists = new StringBuilder();
         for (ArtistCredit artistCredit : artistList) {
-            sbArtists.append(artistCredit.getArtist().getName());
-            sbArtists.append(System.getProperty("line.separator"));
+            String artistName = artistCredit.getArtist().getName();
+            if (artistName != null && !artistName.isEmpty()) {
+                sbArtists.append(artistName);
+                sbArtists.append(System.getProperty("line.separator"));
+            }
         }
-        recordViewHolder.getTvArtistCredit().setText(sbArtists.toString());
+        recordViewHolder.getTvArtistCredit().setText(sbArtists.toString().trim());
 
         List<Release> releaseList = recording.getReleases();
         StringBuilder sbReleases = new StringBuilder();
@@ -80,9 +84,11 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
             String releaseDate = release.getDate();
             if (releaseDate != null && !releaseDate.isEmpty())
                 sbReleases.append(" (" + release.getDate() + ")");
-            sbReleases.append(System.getProperty("line.separator"));
+            if (!sbReleases.toString().isEmpty()) {
+                sbReleases.append(System.getProperty("line.separator"));
+            }
         }
-        recordViewHolder.getTvRelease().setText(sbReleases.toString());
+        recordViewHolder.getTvRelease().setText(sbReleases.toString().trim());
 
     }
 
