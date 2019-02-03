@@ -5,4 +5,5 @@
     <string name="enter_search_string">Upišite tekst za pretraživanje</string>
     <string name="no_match">Nema rezultata</string>
     <string name="records_found">Broj pronađenih zapisa</string>
+    <string name="go">Idi</string>
 </resources>

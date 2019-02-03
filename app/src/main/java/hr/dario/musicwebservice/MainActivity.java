@@ -1,9 +1,11 @@
 package hr.dario.musicwebservice;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hr.dario.musicwebservice.adapters.RecordAdapter;
 import hr.dario.musicwebservice.api.IRecord;
 import hr.dario.musicwebservice.model.Record;
 import retrofit2.Call;
@@ -30,12 +33,23 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
     @BindView(R.id.etSearch)
     EditText etSearch;
 
+    @BindView(R.id.rvRecordList)
+    RecyclerView rvRecordList;
+
+    Record record;
+
+    private RecyclerView.Adapter rvAdapter;
+    private RecyclerView.LayoutManager rvLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupRestAdapter();
+        rvLayout = new LinearLayoutManager(this);
+        rvRecordList.setLayoutManager(rvLayout);
+
     }
 
     private void setupRestAdapter() {
@@ -61,18 +75,16 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
         }
     }
 
-
     @Override
     public void onResponse(@NonNull Call<Record> call, @NonNull Response<Record> response) {
-        Record Record = response.body();
-        if (Record != null) {
-            if(Record.getCount() == 0) {
+        record = response.body();
+        if (record != null) {
+            if (record.getCount() == 0) {
                 tvResult.setText(R.string.no_match);
             } else {
-                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(Record.getCount()));
-                tvResult.append(System.getProperty("line.separator"));
-                tvResult.append(System.getProperty("line.separator"));
-                tvResult.append(Record.toString());
+                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(record.getCount()));
+                rvAdapter = new RecordAdapter(record);
+                rvRecordList.setAdapter(rvAdapter);
             }
         }
     }
@@ -109,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
         if (id == R.id.actionExit) {
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
