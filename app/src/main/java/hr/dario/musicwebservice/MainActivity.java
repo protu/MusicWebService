@@ -1,8 +1,10 @@
 package hr.dario.musicwebservice;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,16 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hr.dario.musicwebservice.adapters.RecordAdapter;
-import hr.dario.musicwebservice.api.IRecord;
 import hr.dario.musicwebservice.model.Record;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import hr.dario.musicwebservice.views.RecordViewModel;
 
-public class MainActivity extends AppCompatActivity implements Callback<Record> {
-    IRecord iRecord;
+public class MainActivity extends AppCompatActivity  {
     @BindView(R.id.tvResult)
     TextView tvResult;
     @BindView(R.id.etSearch)
@@ -36,48 +32,45 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
     @BindView(R.id.rvRecordList)
     RecyclerView rvRecordList;
 
-    Record record;
 
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayout;
+    private RecordViewModel recordViewModel;
+    private Observer<Record> observer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setupRestAdapter();
         rvLayout = new LinearLayoutManager(this);
         rvRecordList.setLayoutManager(rvLayout);
 
+        recordViewModel = ViewModelProviders.of(this).get(RecordViewModel.class);
+        observer = new Observer<Record>() {
+            @Override
+            public void onChanged(@Nullable Record record) {
+                updateRecords(record);
+            }
+        };
+        recordViewModel.getRecord().observe(this, observer);
+
     }
 
-    private void setupRestAdapter() {
-        Retrofit restAdapter = new Retrofit.Builder()
-                .baseUrl(IRecord.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        iRecord = restAdapter.create(IRecord.class);
-    }
-
-    private void getRecord(String title) {
-        iRecord.getRecord(title).enqueue(this); // send request (async) and notify callback (this)
-    }
 
     @OnClick(R.id.ibtnSearch)
     public void ibtnSearchClick() {
         if (etSearch.getText().length() > 0) {
             hideKeyboard();
-            getRecord(etSearch.getText().toString());
+            recordViewModel.searchRecord(etSearch.getText().toString());
+            recordViewModel.getRecord().observe(this, observer);
         } else {
             Toast.makeText(this, getString(R.string.please_enter_search_string), Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onResponse(@NonNull Call<Record> call, @NonNull Response<Record> response) {
-        record = response.body();
+
+    private void updateRecords(Record record) {
         if (record != null) {
             if (record.getCount() == 0) {
                 tvResult.setText(R.string.no_match);
@@ -89,14 +82,8 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
         }
     }
 
-    @Override
-    public void onFailure(@NonNull Call<Record> call, @NonNull Throwable t) {
-        Toast.makeText(this, t.toString(), Toast.LENGTH_LONG).show();
-        tvResult.setText("");
-    }
 
     private void hideKeyboard() {
-        // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)
