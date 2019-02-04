@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Record> 
                 tvResult.setText(R.string.no_match);
             } else {
                 tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(record.getCount()));
-                rvAdapter = new RecordAdapter(record);
-                rvRecordList.setAdapter(rvAdapter);
             }
+            rvAdapter = new RecordAdapter(record);
+            rvRecordList.setAdapter(rvAdapter);
         }
     }
 

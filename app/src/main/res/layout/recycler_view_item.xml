@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llyRecord"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:drawable/editbox_dropdown_light_frame"
+    android:fadingEdge="horizontal"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvRecordTitle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         tools:text="@tools:sample/full_names" />
@@ -19,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        android:layout_marginEnd="4dp"
         tools:text="@tools:sample/lorem[4:10]" />
 
     <TextView
@@ -26,5 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="6dp"
         tools:text="@tools:sample/date/hhmm" />
 </LinearLayout>
