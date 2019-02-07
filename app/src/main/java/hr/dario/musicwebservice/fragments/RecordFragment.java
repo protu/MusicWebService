@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.adapters.RecordAdapter;
+import hr.dario.musicwebservice.adapters.SwipeController;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.views.RecordViewModel;
 
@@ -61,6 +63,9 @@ public class RecordFragment extends Fragment {
             }
         };
         recordViewModel.getRecord().observe(this, observer);
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(rvRecordList);
 
 
         return rootView;
@@ -109,5 +114,6 @@ public class RecordFragment extends Fragment {
         }
         return true;
     }
+
 
 }
