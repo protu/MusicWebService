@@ -6,4 +6,5 @@
     <string name="no_match">No match</string>
     <string name="records_found">Records found</string>
     <string name="go">Go</string>
+    <string name="add">Add</string>
 </resources>

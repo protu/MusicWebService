@@ -56,6 +56,10 @@ public class Record {
         this.recordings = recordings;
     }
 
+    public void removeRecording(int recPosition) {
+        recordings.remove(recPosition);
+    }
+
     @Override
     public String toString() {
         StringBuilder strRecordList = new StringBuilder();

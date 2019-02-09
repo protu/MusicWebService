@@ -12,18 +12,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import hr.dario.musicwebservice.R;
+import hr.dario.musicwebservice.api.ItemTouchedAdapter;
 import hr.dario.musicwebservice.model.ArtistCredit;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.model.Recording;
 import hr.dario.musicwebservice.model.Release;
 
-public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
+public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> implements ItemTouchedAdapter {
 
     private Record record;
 
     public RecordAdapter(Record record) {
         this.record = record;
     }
+
 
     public static class RecordViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvRecordTitle;
@@ -107,5 +109,10 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
         return record.getRecordings().size();
     }
 
+    @Override
+    public void onItemSwiped(int itemId) {
+        record.removeRecording(itemId);
+        notifyItemRemoved(itemId);
+    }
 
 }

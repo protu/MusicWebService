@@ -26,7 +26,7 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.adapters.RecordAdapter;
-import hr.dario.musicwebservice.adapters.SwipeController;
+import hr.dario.musicwebservice.api.ItemTouchedAdapter;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.views.RecordViewModel;
 
@@ -44,6 +44,10 @@ public class RecordFragment extends Fragment {
     private RecyclerView.LayoutManager rvLayout;
     private RecordViewModel recordViewModel;
     private Observer<Record> observer;
+
+    public static RecordFragment newInstance() {
+        return new RecordFragment();
+    }
 
 
     @Nullable
@@ -63,10 +67,24 @@ public class RecordFragment extends Fragment {
             }
         };
         recordViewModel.getRecord().observe(this, observer);
-        SwipeController swipeController = new SwipeController();
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-        itemTouchHelper.attachToRecyclerView(rvRecordList);
+//        SwipeController swipeController = new SwipeController();
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+//        itemTouchHelper.attachToRecyclerView(rvRecordList);
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.Callback.DEFAULT_DRAG_ANIMATION_DURATION, ItemTouchHelper.Callback.DEFAULT_DRAG_ANIMATION_DURATION) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+                ((ItemTouchedAdapter)rvAdapter).onItemSwiped(viewHolder.getAdapterPosition());
+                updateRecords(recordViewModel.getRecord().getValue());
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(rvRecordList);
 
         return rootView;
     }
