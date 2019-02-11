@@ -1,9 +1,10 @@
 
 package hr.dario.musicwebservice.model;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Recording {
 
@@ -118,4 +119,23 @@ public class Recording {
         this.tags = tags;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder strRecording = new StringBuilder();
+        strRecording.append(getTitle() + " - ");
+        List<ArtistCredit> artists = getArtistCredit();
+        strRecording.append(artists.get(0).getArtist().getName());
+        strRecording.append(System.getProperty("line.separator"));
+        List<Release> releases = getReleases();
+        for (Release release : releases) {
+            String releaseTitle = release.getTitle();
+            if (releaseTitle != null && !releaseTitle.isEmpty())
+                strRecording.append(release.getTitle());
+            String releaseDate = release.getDate();
+            if (releaseDate != null && !releaseDate.isEmpty())
+                strRecording.append(" (" + release.getDate() + ")");
+            strRecording.append(System.getProperty("line.separator"));
+        }
+        return strRecording.toString();
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
+import hr.dario.musicwebservice.fragments.RecordFragment;
 import hr.dario.musicwebservice.model.ArtistCredit;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.model.Recording;
@@ -70,6 +71,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
 
     @Override
     public void onBindViewHolder(@NonNull RecordViewHolder recordViewHolder, int i) {
+
         try {
             Recording recording = record.getRecordings().get(i);
             recordViewHolder.getTvRecordTitle().setText(recording.getTitle());

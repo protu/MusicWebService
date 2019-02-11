@@ -40,8 +40,6 @@ public class RecordFragment extends Fragment {
     @BindView(R.id.rvRecordList)
     RecyclerView rvRecordList;
 
-    private RecyclerView.Adapter rvAdapter;
-    private RecyclerView.LayoutManager rvLayout;
     private RecordViewModel recordViewModel;
     private Observer<Record> observer;
 
@@ -49,13 +47,18 @@ public class RecordFragment extends Fragment {
         return new RecordFragment();
     }
 
+    private ItemTouchedAdapter itemTouchedAdapter;
+
+    public void setItemTouchedAdapter(ItemTouchedAdapter itemTouchedAdapter) {
+        this.itemTouchedAdapter = itemTouchedAdapter;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.records_fragment, container, false);
         ButterKnife.bind(this, rootView);
-
+        RecyclerView.LayoutManager rvLayout;
         rvLayout = new LinearLayoutManager(getContext());
         rvRecordList.setLayoutManager(rvLayout);
 
@@ -67,9 +70,7 @@ public class RecordFragment extends Fragment {
             }
         };
         recordViewModel.getRecord().observe(this, observer);
-//        SwipeController swipeController = new SwipeController();
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-//        itemTouchHelper.attachToRecyclerView(rvRecordList);
+
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.Callback.DEFAULT_DRAG_ANIMATION_DURATION, ItemTouchHelper.Callback.DEFAULT_DRAG_ANIMATION_DURATION) {
             @Override
@@ -80,7 +81,8 @@ public class RecordFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-                ((ItemTouchedAdapter)rvAdapter).onItemSwiped(viewHolder.getAdapterPosition());
+//                ((ItemTouchedAdapter)rvAdapter).onItemSwiped(viewHolder.getAdapterPosition());
+                itemTouchedAdapter.onItemSwiped(viewHolder.getAdapterPosition());
                 updateRecords(recordViewModel.getRecord().getValue());
             }
         });
@@ -108,7 +110,8 @@ public class RecordFragment extends Fragment {
             } else {
                 tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(record.getCount()));
             }
-            rvAdapter = new RecordAdapter(record);
+            RecyclerView.Adapter rvAdapter = new RecordAdapter(record);
+            setItemTouchedAdapter((ItemTouchedAdapter) rvAdapter);
             rvRecordList.setAdapter(rvAdapter);
         }
     }
