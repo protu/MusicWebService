@@ -4,7 +4,9 @@ package hr.dario.musicwebservice.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ArtistCredit_ {
+import java.io.Serializable;
+
+public class ArtistCredit_ implements Serializable {
 
     @SerializedName("artist")
     @Expose

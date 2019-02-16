@@ -6,4 +6,6 @@
     <string name="no_match">Nema rezultata</string>
     <string name="records_found">Broj pronađenih zapisa</string>
     <string name="go">Idi</string>
+    <string name="add">Dodaj</string>
+    <string name="generated_playlist">Popis pjesama</string>
 </resources>

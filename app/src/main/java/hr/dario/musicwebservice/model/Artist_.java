@@ -4,7 +4,9 @@ package hr.dario.musicwebservice.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Artist_ {
+import java.io.Serializable;
+
+public class Artist_ implements Serializable {
 
     @SerializedName("id")
     @Expose

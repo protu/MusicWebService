@@ -1,7 +1,6 @@
 package hr.dario.musicwebservice.adapters;
 
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,22 +12,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import hr.dario.musicwebservice.R;
-import hr.dario.musicwebservice.api.ItemTouchedAdapter;
-import hr.dario.musicwebservice.api.SingleRecordingList;
-import hr.dario.musicwebservice.fragments.RecordFragment;
-import hr.dario.musicwebservice.model.ArtistCredit;
-import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.model.Recording;
-import hr.dario.musicwebservice.model.Release;
 
-public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> implements ItemTouchedAdapter {
+public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAdapter.RecordViewHolder> {
 
-    private Record record;
+    private List<Recording> recordingList;
 
-    public RecordAdapter(Record record) {
-        this.record = record;
+    public PlaylistRecordAdapter(List<Recording> recordingList) {
+        this.recordingList = recordingList;
     }
-
 
     public static class RecordViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvRecordTitle;
@@ -75,7 +67,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
     public void onBindViewHolder(@NonNull RecordViewHolder recordViewHolder, int i) {
 
         try {
-            Recording recording = record.getRecordings().get(i);
+            Recording recording = this.recordingList.get(i);
             recordViewHolder.getTvRecordTitle().setText(recording.getTitle());
             recordViewHolder.getTvArtistCredit().setText(recording.getStringArtistCredits().trim());
             recordViewHolder.getTvRelease().setText(recording.getStringReleases().trim());
@@ -84,15 +76,15 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return record.getRecordings().size();
+    public void changeData(List<Recording> recordingList) {
+        this.recordingList = recordingList;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onItemSwiped(int itemId) {
-        record.removeRecording(itemId);
-        notifyItemRemoved(itemId);
+    public int getItemCount() {
+        return recordingList.size();
     }
+
 
 }

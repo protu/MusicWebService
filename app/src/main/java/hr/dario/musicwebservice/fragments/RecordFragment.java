@@ -3,6 +3,7 @@ package hr.dario.musicwebservice.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,7 +29,11 @@ import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.adapters.RecordAdapter;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
 import hr.dario.musicwebservice.model.Record;
+import hr.dario.musicwebservice.util.RecordingIntentService;
 import hr.dario.musicwebservice.views.RecordViewModel;
+
+import static hr.dario.musicwebservice.util.AppConst.RECORDING_SEND;
+
 
 public class RecordFragment extends Fragment {
 
@@ -80,10 +85,13 @@ public class RecordFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
-//                ((ItemTouchedAdapter)rvAdapter).onItemSwiped(viewHolder.getAdapterPosition());
-                itemTouchedAdapter.onItemSwiped(viewHolder.getAdapterPosition());
+                int position = viewHolder.getAdapterPosition();
+                Intent intent = new Intent(getActivity(), RecordingIntentService.class);
+                intent.putExtra(RECORDING_SEND, recordViewModel.getRecord().getValue().getRecordings().get(position));
+                getActivity().startService(intent);
+                itemTouchedAdapter.onItemSwiped(position);
                 updateRecords(recordViewModel.getRecord().getValue());
+
             }
         });
         itemTouchHelper.attachToRecyclerView(rvRecordList);

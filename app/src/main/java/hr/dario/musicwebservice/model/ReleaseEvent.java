@@ -4,7 +4,9 @@ package hr.dario.musicwebservice.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ReleaseEvent {
+import java.io.Serializable;
+
+public class ReleaseEvent implements Serializable {
 
     @SerializedName("date")
     @Expose

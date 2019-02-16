@@ -7,4 +7,5 @@
     <string name="records_found">Records found</string>
     <string name="go">Go</string>
     <string name="add">Add</string>
+    <string name="generated_playlist">Generated Playlist</string>
 </resources>

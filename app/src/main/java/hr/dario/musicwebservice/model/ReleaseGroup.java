@@ -1,11 +1,12 @@
 
 package hr.dario.musicwebservice.model;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ReleaseGroup {
+public class ReleaseGroup implements Serializable {
 
     @SerializedName("id")
     @Expose

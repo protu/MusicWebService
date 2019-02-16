@@ -4,7 +4,9 @@ package hr.dario.musicwebservice.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Alias {
+import java.io.Serializable;
+
+public class Alias implements Serializable {
 
     @SerializedName("sort-name")
     @Expose
