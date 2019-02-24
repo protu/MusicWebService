@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Track implements Serializable {
+public class Track  {
 
     @SerializedName("id")
     @Expose

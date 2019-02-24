@@ -1,7 +1,6 @@
 package hr.dario.musicwebservice.adapters;
 
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,16 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
-import hr.dario.musicwebservice.api.SingleRecordingList;
-import hr.dario.musicwebservice.fragments.RecordFragment;
-import hr.dario.musicwebservice.model.ArtistCredit;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.model.Recording;
-import hr.dario.musicwebservice.model.Release;
 
 public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> implements ItemTouchedAdapter {
 

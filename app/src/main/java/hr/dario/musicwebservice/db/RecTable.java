@@ -8,19 +8,19 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import hr.dario.musicwebservice.db.model.DbRecordings;
+import hr.dario.musicwebservice.db.model.DbRecording;
 
 @Dao
 public interface RecTable {
 
-    @Query("SELECT * FROM DbRecordings ORDER BY id")
-    List<DbRecordings> selectAll();
+    @Query("SELECT * FROM DbRecording ORDER BY id")
+    List<DbRecording> selectAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(DbRecordings recordings);
+    void insert(DbRecording recordings);
 
     @Delete
-    void delete(DbRecordings recordings);
+    void delete(DbRecording recordings);
 
 
 }

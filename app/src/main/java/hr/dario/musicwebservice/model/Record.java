@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 import hr.dario.musicwebservice.R;
 
-public class Record implements Serializable {
+public class Record  {
 
     @SerializedName("created")
     @Expose

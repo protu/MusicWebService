@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class ArtistCredit implements Serializable {
+public class ArtistCredit  {
 
     @SerializedName("artist")
     @Expose

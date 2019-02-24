@@ -12,13 +12,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import hr.dario.musicwebservice.R;
+import hr.dario.musicwebservice.db.model.DbRecording;
 import hr.dario.musicwebservice.model.Recording;
 
 public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAdapter.RecordViewHolder> {
 
-    private List<Recording> recordingList;
+    private List<DbRecording> recordingList;
 
-    public PlaylistRecordAdapter(List<Recording> recordingList) {
+    public PlaylistRecordAdapter(List<DbRecording> recordingList) {
         this.recordingList = recordingList;
     }
 
@@ -67,16 +68,16 @@ public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAd
     public void onBindViewHolder(@NonNull RecordViewHolder recordViewHolder, int i) {
 
         try {
-            Recording recording = this.recordingList.get(i);
+            DbRecording recording = this.recordingList.get(i);
             recordViewHolder.getTvRecordTitle().setText(recording.getTitle());
-            recordViewHolder.getTvArtistCredit().setText(recording.getStringArtistCredits().trim());
-            recordViewHolder.getTvRelease().setText(recording.getStringReleases().trim());
+            recordViewHolder.getTvArtistCredit().setText(recording.getArtistCredit());
+            recordViewHolder.getTvRelease().setText(recording.getRelease());
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    public void changeData(List<Recording> recordingList) {
+    public void changeData(List<DbRecording> recordingList) {
         this.recordingList = recordingList;
         notifyDataSetChanged();
     }

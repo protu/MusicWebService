@@ -5,7 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class DbRecordings {
+public class DbRecording {
+
+//    public DbRecording() {}
+
 
     @PrimaryKey(autoGenerate = true)
     private int id = 0;
@@ -17,12 +20,9 @@ public class DbRecordings {
     private String artistCredit;
 
     @ColumnInfo(name = "release_title")
-    private String releaseTitle;
+    private String release;
 
-    @ColumnInfo(name = "release_date")
-    private String releaseDate;
-
-    public int getId() {
+     public int getId() {
         return id;
     }
 
@@ -46,19 +46,12 @@ public class DbRecordings {
         this.artistCredit = artistCredit;
     }
 
-    public String getReleaseTitle() {
-        return releaseTitle;
+    public String getRelease() {
+        return release;
     }
 
-    public void setReleaseTitle(String releaseTitle) {
-        this.releaseTitle = releaseTitle;
+    public void setRelease(String release) {
+        this.release = release;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
 }

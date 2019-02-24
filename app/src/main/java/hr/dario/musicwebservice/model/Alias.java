@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Alias implements Serializable {
+public class Alias {
 
     @SerializedName("sort-name")
     @Expose

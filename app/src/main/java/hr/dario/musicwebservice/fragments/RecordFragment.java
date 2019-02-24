@@ -28,11 +28,13 @@ import butterknife.OnEditorAction;
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.adapters.RecordAdapter;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
+import hr.dario.musicwebservice.db.model.DbRecording;
 import hr.dario.musicwebservice.model.Record;
+import hr.dario.musicwebservice.model.Recording;
 import hr.dario.musicwebservice.util.RecordingIntentService;
 import hr.dario.musicwebservice.views.RecordViewModel;
 
-import static hr.dario.musicwebservice.util.AppConst.RECORDING_SEND;
+import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 
 
 public class RecordFragment extends Fragment {
@@ -87,12 +89,20 @@ public class RecordFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 int position = viewHolder.getAdapterPosition();
                 Intent intent = new Intent(getActivity(), RecordingIntentService.class);
-                intent.putExtra(RECORDING_SEND, recordViewModel.getRecord().getValue().getRecordings().get(position));
+
+                Recording currentRecording = recordViewModel.getRecord().getValue().getRecordings().get(position);
+
+                DbRecording dbRecordings = new DbRecording();
+                dbRecordings.setTitle(currentRecording.getTitle().trim());
+                dbRecordings.setArtistCredit(currentRecording.getStringArtistCredits().trim());
+                dbRecordings.setRelease(currentRecording.getStringReleases().trim());
+
+                database.recTable().insert(dbRecordings);
                 getActivity().startService(intent);
                 itemTouchedAdapter.onItemSwiped(position);
                 updateRecords(recordViewModel.getRecord().getValue());
-
             }
+
         });
         itemTouchHelper.attachToRecyclerView(rvRecordList);
 

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class ReleaseEvent implements Serializable {
+public class ReleaseEvent  {
 
     @SerializedName("date")
     @Expose

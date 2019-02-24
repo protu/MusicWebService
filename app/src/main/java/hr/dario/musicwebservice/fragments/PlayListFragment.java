@@ -18,9 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.adapters.PlaylistRecordAdapter;
-import hr.dario.musicwebservice.api.SingleRecordingList;
 
-import static hr.dario.musicwebservice.util.AppConst.RECORDING_SEND;
+import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 import static hr.dario.musicwebservice.util.AppConst.RECORDING_UPDATE;
 
 public class PlayListFragment extends Fragment {
@@ -33,7 +32,6 @@ public class PlayListFragment extends Fragment {
 
     private PlaylistRecordAdapter adapter;
     private BroadcastReceiver breceiver;
-    SingleRecordingList singleRecordingList = SingleRecordingList.getInstance();
 
     @Nullable
     @Override
@@ -41,7 +39,7 @@ public class PlayListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.playlist_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
-        adapter = new PlaylistRecordAdapter(singleRecordingList.getRecordingList());
+        adapter = new PlaylistRecordAdapter(database.recTable().selectAll());
         RecyclerView.LayoutManager rvLayout;
         rvLayout = new LinearLayoutManager(getContext());
         rvRecordPlayList.setLayoutManager(rvLayout);
@@ -51,7 +49,7 @@ public class PlayListFragment extends Fragment {
     }
 
     private void updateUi() {
-        adapter.changeData(singleRecordingList.getRecordingList());
+        adapter.changeData(database.recTable().selectAll());
     }
 
     private void registerUiWatcher() {
@@ -66,7 +64,9 @@ public class PlayListFragment extends Fragment {
         getActivity().registerReceiver(breceiver, intentFilter);
     }
 
-    private void unRegisterUiWatcher() { getActivity().unregisterReceiver(breceiver);}
+    private void unRegisterUiWatcher() {
+        getActivity().unregisterReceiver(breceiver);
+    }
 
     @Override
     public void onResume() {
@@ -80,5 +80,6 @@ public class PlayListFragment extends Fragment {
         super.onPause();
         unRegisterUiWatcher();
     }
+
 
 }

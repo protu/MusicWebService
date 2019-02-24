@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Tag implements Serializable {
+public class Tag  {
 
     @SerializedName("count")
     @Expose
