@@ -1,4 +1,4 @@
-package hr.dario.musicwebservice.adapters;
+package hr.dario.musicwebservice.ui.adapters;
 
 
 import android.support.annotation.NonNull;

@@ -1,18 +1,24 @@
-package hr.dario.musicwebservice.adapters;
+package hr.dario.musicwebservice.ui.adapters;
 
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import hr.dario.musicwebservice.fragments.PlayListFragment;
-import hr.dario.musicwebservice.fragments.RecordFragment;
+import hr.dario.musicwebservice.R;
+import hr.dario.musicwebservice.ui.fragments.PlayListFragment;
+import hr.dario.musicwebservice.ui.fragments.RecordFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    Context context;
+
+    public SectionsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     @Override
@@ -36,9 +42,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Search";
+                return context.getString(R.string.search);
             case 1:
-                return "Playlist";
+                return context.getString(R.string.playlist);
         }
         return null;
     }

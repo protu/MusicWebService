@@ -1,4 +1,4 @@
-package hr.dario.musicwebservice.fragments;
+package hr.dario.musicwebservice.ui.fragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,12 +17,16 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hr.dario.musicwebservice.R;
-import hr.dario.musicwebservice.adapters.PlaylistRecordAdapter;
+import hr.dario.musicwebservice.db.model.DbRecording;
+import hr.dario.musicwebservice.ui.adapters.OnListItemClickListener;
+import hr.dario.musicwebservice.ui.adapters.PlaylistRecordAdapter;
+import hr.dario.musicwebservice.ui.dialog.DeleteRecordListener;
+import hr.dario.musicwebservice.ui.dialog.DeleteRecordingDialog;
 
 import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 import static hr.dario.musicwebservice.util.AppConst.RECORDING_UPDATE;
 
-public class PlayListFragment extends Fragment {
+public class PlayListFragment extends Fragment implements DeleteRecordListener, OnListItemClickListener {
     public static PlayListFragment newInstance() {
         return new PlayListFragment();
     }
@@ -39,12 +43,11 @@ public class PlayListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.playlist_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
-        adapter = new PlaylistRecordAdapter(database.recTable().selectAll());
+        adapter = new PlaylistRecordAdapter(database.recTable().selectAll(), this);
         RecyclerView.LayoutManager rvLayout;
         rvLayout = new LinearLayoutManager(getContext());
         rvRecordPlayList.setLayoutManager(rvLayout);
         rvRecordPlayList.setAdapter(adapter);
-
         return rootView;
     }
 
@@ -82,4 +85,17 @@ public class PlayListFragment extends Fragment {
     }
 
 
+    @Override
+    public void deleteRecordDialogActionPerformed(DbRecording dbRecording) {
+        database.recTable().delete(dbRecording);
+        updateUi();
+    }
+
+    @Override
+    public void listItemClicked(int position) {
+        DeleteRecordingDialog deleteRecordingDialog = new DeleteRecordingDialog();
+        deleteRecordingDialog.setListener(this);
+        deleteRecordingDialog.setDbRecording(database.recTable().selectAll().get(position));
+        deleteRecordingDialog.show(getActivity().getSupportFragmentManager(), "DeleteRecordDialog");
+    }
 }

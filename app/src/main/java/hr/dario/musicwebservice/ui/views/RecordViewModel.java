@@ -1,4 +1,4 @@
-package hr.dario.musicwebservice.views;
+package hr.dario.musicwebservice.ui.views;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

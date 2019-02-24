@@ -8,4 +8,8 @@
     <string name="go">Idi</string>
     <string name="add">Dodaj</string>
     <string name="generated_playlist">Popis pjesama</string>
+    <string name="delete_recording">Obriši unos</string>
+    <string name="delete">Brisanje</string>
+    <string name="search">Pronađi</string>
+    <string name="playlist">Play lista</string>
 </resources>

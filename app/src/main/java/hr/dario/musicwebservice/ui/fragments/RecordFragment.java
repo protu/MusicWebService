@@ -1,4 +1,4 @@
-package hr.dario.musicwebservice.fragments;
+package hr.dario.musicwebservice.ui.fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -26,13 +26,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import hr.dario.musicwebservice.R;
-import hr.dario.musicwebservice.adapters.RecordAdapter;
+import hr.dario.musicwebservice.ui.adapters.RecordAdapter;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
 import hr.dario.musicwebservice.db.model.DbRecording;
 import hr.dario.musicwebservice.model.Record;
 import hr.dario.musicwebservice.model.Recording;
 import hr.dario.musicwebservice.util.RecordingIntentService;
-import hr.dario.musicwebservice.views.RecordViewModel;
+import hr.dario.musicwebservice.ui.views.RecordViewModel;
 
 import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 

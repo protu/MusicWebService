@@ -1,4 +1,4 @@
-package hr.dario.musicwebservice.adapters;
+package hr.dario.musicwebservice.ui.adapters;
 
 
 import android.support.annotation.NonNull;
@@ -11,19 +11,22 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.db.model.DbRecording;
-import hr.dario.musicwebservice.model.Recording;
 
 public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAdapter.RecordViewHolder> {
 
     private List<DbRecording> recordingList;
+    private OnListItemClickListener listItemClickListener;
 
-    public PlaylistRecordAdapter(List<DbRecording> recordingList) {
+    public PlaylistRecordAdapter(List<DbRecording> recordingList, OnListItemClickListener listItemClickListener) {
         this.recordingList = recordingList;
+        this.listItemClickListener = listItemClickListener;
     }
 
-    public static class RecordViewHolder extends RecyclerView.ViewHolder {
+    public class RecordViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvRecordTitle;
         private final TextView tvArtistCredit;
         private final TextView tvRelease;
@@ -36,6 +39,8 @@ public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAd
             tvRecordTitle = viewRecord.findViewById(R.id.tvRecordTitle);
             tvRelease = viewRecord.findViewById(R.id.tvRelease);
             llyRecord = viewRecord.findViewById(R.id.llyRecord);
+
+            ButterKnife.bind(this, itemView);
         }
 
         public TextView getTvRecordTitle() {
@@ -53,6 +58,9 @@ public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAd
         public LinearLayout getLlyRecord() {
             return llyRecord;
         }
+
+        @OnClick
+        void onClick() {listItemClickListener.listItemClicked(getAdapterPosition());}
 
     }
 
