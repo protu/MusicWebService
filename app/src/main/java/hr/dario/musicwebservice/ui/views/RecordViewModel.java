@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
+import java.util.Map;
+
 import hr.dario.musicwebservice.api.IRecord;
 import hr.dario.musicwebservice.model.Record;
 import retrofit2.Call;
@@ -39,9 +41,9 @@ public class RecordViewModel extends ViewModel implements Callback<Record> {
         return records;
     }
 
-    public void searchRecord(String title) {
+    public void searchRecord(Map<String, String> searchOptions) {
         records = new MutableLiveData<>();
-        iRecord.getRecord(title).enqueue(this);
+        iRecord.getRecord(searchOptions).enqueue(this);
     }
 
     @Override

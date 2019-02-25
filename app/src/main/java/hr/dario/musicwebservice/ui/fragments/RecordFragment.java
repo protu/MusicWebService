@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,6 +38,7 @@ import hr.dario.musicwebservice.util.RecordingIntentService;
 import hr.dario.musicwebservice.ui.views.RecordViewModel;
 
 import static hr.dario.musicwebservice.MusicWebServiceApp.database;
+import static hr.dario.musicwebservice.util.AppConst.LIMIT;
 
 
 public class RecordFragment extends Fragment {
@@ -55,6 +59,8 @@ public class RecordFragment extends Fragment {
     }
 
     private ItemTouchedAdapter itemTouchedAdapter;
+    private long firstRecording = 0;
+    private long lastRecording;
 
     public void setItemTouchedAdapter(ItemTouchedAdapter itemTouchedAdapter) {
         this.itemTouchedAdapter = itemTouchedAdapter;
@@ -113,7 +119,11 @@ public class RecordFragment extends Fragment {
     public void ibtnSearchClick() {
         if (etSearch.getText().length() > 0) {
             hideKeyboard();
-            recordViewModel.searchRecord(etSearch.getText().toString());
+            Map<String, String> searchOptions = new HashMap<>();
+            searchOptions.put("query", etSearch.getText().toString());
+            searchOptions.put("limit", String.valueOf(LIMIT));
+            searchOptions.put("offset", String.valueOf(lastRecording));
+            recordViewModel.searchRecord(searchOptions);
             recordViewModel.getRecord().observe(this, observer);
         } else {
             Toast.makeText(getContext(), getString(R.string.please_enter_search_string), Toast.LENGTH_SHORT).show();
@@ -126,7 +136,15 @@ public class RecordFragment extends Fragment {
             if (record.getCount() == 0) {
                 tvResult.setText(R.string.no_match);
             } else {
-                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(record.getCount()));
+                long recordCount = record.getCount();
+                long underLimit = recordCount - firstRecording;
+                if (underLimit < LIMIT) {
+                    lastRecording = firstRecording + underLimit;
+                } else {
+                    lastRecording = firstRecording + LIMIT;
+                }
+                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(recordCount));
+                tvResult.append(getString(R.string.sh_record_from) + String.valueOf(firstRecording) + getString(R.string.to) + String.valueOf(lastRecording));
             }
             RecyclerView.Adapter rvAdapter = new RecordAdapter(record);
             setItemTouchedAdapter((ItemTouchedAdapter) rvAdapter);

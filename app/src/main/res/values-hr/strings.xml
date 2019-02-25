@@ -12,4 +12,6 @@
     <string name="delete">Brisanje</string>
     <string name="search">Pronađi</string>
     <string name="playlist">Play lista</string>
+    <string name="sh_record_from">prikazuje od</string>
+    <string name="to">do</string>
 </resources>
