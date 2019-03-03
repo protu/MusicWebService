@@ -55,9 +55,6 @@ public class PlaylistRecordAdapter extends RecyclerView.Adapter<PlaylistRecordAd
             return tvRelease;
         }
 
-        public LinearLayout getLlyRecord() {
-            return llyRecord;
-        }
 
         @OnClick
         void onClick() {listItemClickListener.listItemClicked(getAdapterPosition());}

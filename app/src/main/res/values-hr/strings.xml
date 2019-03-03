@@ -14,4 +14,5 @@
     <string name="playlist">Play lista</string>
     <string name="sh_record_from">prikazuje od</string>
     <string name="to">do</string>
+    <string name="add_recording">Dodaj pjesmu</string>
 </resources>

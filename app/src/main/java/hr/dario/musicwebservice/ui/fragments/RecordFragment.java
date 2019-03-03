@@ -11,13 +11,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,19 +29,27 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import hr.dario.musicwebservice.R;
-import hr.dario.musicwebservice.ui.adapters.RecordAdapter;
 import hr.dario.musicwebservice.api.ItemTouchedAdapter;
-import hr.dario.musicwebservice.db.model.DbRecording;
 import hr.dario.musicwebservice.model.Record;
-import hr.dario.musicwebservice.model.Recording;
-import hr.dario.musicwebservice.util.RecordingIntentService;
+import hr.dario.musicwebservice.ui.adapters.OnListItemClickListener;
+import hr.dario.musicwebservice.ui.adapters.RecordAdapter;
+import hr.dario.musicwebservice.ui.dialog.AddRecordingDialog;
 import hr.dario.musicwebservice.ui.views.RecordViewModel;
+import hr.dario.musicwebservice.util.RecordingIntentService;
 
-import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 import static hr.dario.musicwebservice.util.AppConst.LIMIT;
 
 
-public class RecordFragment extends Fragment {
+public class RecordFragment extends Fragment implements OnListItemClickListener {
+
+    private String searchString;
+    private RecordViewModel recordViewModel;
+    private Observer<Record> observer;
+    private ItemTouchedAdapter itemTouchedAdapter;
+    private long myOffset = 0;
+    private long recordingsCount;
+    private boolean isLoading = false;
+    private RecyclerView.Adapter rvAdapter;
 
     @BindView(R.id.tvResult)
     TextView tvResult;
@@ -51,20 +59,19 @@ public class RecordFragment extends Fragment {
     @BindView(R.id.rvRecordList)
     RecyclerView rvRecordList;
 
-    private RecordViewModel recordViewModel;
-    private Observer<Record> observer;
+    @BindView(R.id.pbSpinner)
+    ProgressBar pbSpinner;
+
 
     public static RecordFragment newInstance() {
         return new RecordFragment();
     }
 
-    private ItemTouchedAdapter itemTouchedAdapter;
-    private long firstRecording = 0;
-    private long lastRecording;
 
     public void setItemTouchedAdapter(ItemTouchedAdapter itemTouchedAdapter) {
         this.itemTouchedAdapter = itemTouchedAdapter;
     }
+
 
     @Nullable
     @Override
@@ -95,23 +102,39 @@ public class RecordFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 int position = viewHolder.getAdapterPosition();
                 Intent intent = new Intent(getActivity(), RecordingIntentService.class);
-
-                Recording currentRecording = recordViewModel.getRecord().getValue().getRecordings().get(position);
-
-                DbRecording dbRecordings = new DbRecording();
-                dbRecordings.setTitle(currentRecording.getTitle().trim());
-                dbRecordings.setArtistCredit(currentRecording.getStringArtistCredits().trim());
-                dbRecordings.setRelease(currentRecording.getStringReleases().trim());
-
-                database.recTable().insert(dbRecordings);
                 getActivity().startService(intent);
                 itemTouchedAdapter.onItemSwiped(position);
-                updateRecords(recordViewModel.getRecord().getValue());
             }
 
         });
         itemTouchHelper.attachToRecyclerView(rvRecordList);
 
+        rvRecordList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+                super.onScrolled(recyclerView, dx, dy);
+                int firstPosition = ((LinearLayoutManager) rvRecordList.getLayoutManager()).findFirstVisibleItemPosition();
+                int visibleItemCount = rvRecordList.getLayoutManager().getChildCount();
+                int totalItemCount = rvRecordList.getLayoutManager().getItemCount();
+
+                if (!isLoading && visibleItemCount + firstPosition >= totalItemCount) {
+                    myOffset += LIMIT;
+                    if (myOffset < recordingsCount) {
+                        searchRecords();
+                    } else {
+                        myOffset -= LIMIT;
+                    }
+                }
+            }
+
+        });
         return rootView;
     }
 
@@ -119,15 +142,24 @@ public class RecordFragment extends Fragment {
     public void ibtnSearchClick() {
         if (etSearch.getText().length() > 0) {
             hideKeyboard();
-            Map<String, String> searchOptions = new HashMap<>();
-            searchOptions.put("query", etSearch.getText().toString());
-            searchOptions.put("limit", String.valueOf(LIMIT));
-            searchOptions.put("offset", String.valueOf(lastRecording));
-            recordViewModel.searchRecord(searchOptions);
-            recordViewModel.getRecord().observe(this, observer);
+            myOffset = 0;
+            searchString = etSearch.getText().toString();
+            clearRecords();
+            searchRecords();
         } else {
             Toast.makeText(getContext(), getString(R.string.please_enter_search_string), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void searchRecords() {
+        isLoading = true;
+        pbSpinner.setVisibility(View.VISIBLE);
+        Map<String, String> searchOptions = new HashMap<>();
+        searchOptions.put("query", searchString);
+        searchOptions.put("limit", String.valueOf(LIMIT));
+        searchOptions.put("offset", String.valueOf(myOffset));
+        recordViewModel.searchRecord(searchOptions);
+        recordViewModel.getRecord().observe(this, observer);
     }
 
 
@@ -136,22 +168,27 @@ public class RecordFragment extends Fragment {
             if (record.getCount() == 0) {
                 tvResult.setText(R.string.no_match);
             } else {
-                long recordCount = record.getCount();
-                long underLimit = recordCount - firstRecording;
-                if (underLimit < LIMIT) {
-                    lastRecording = firstRecording + underLimit;
-                } else {
-                    lastRecording = firstRecording + LIMIT;
-                }
-                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(recordCount));
-                tvResult.append(getString(R.string.sh_record_from) + String.valueOf(firstRecording) + getString(R.string.to) + String.valueOf(lastRecording));
+                recordingsCount = record.getCount();
+                tvResult.setText(getString(R.string.records_found) + ": " + String.valueOf(recordingsCount));
             }
-            RecyclerView.Adapter rvAdapter = new RecordAdapter(record);
-            setItemTouchedAdapter((ItemTouchedAdapter) rvAdapter);
-            rvRecordList.setAdapter(rvAdapter);
+            if (rvAdapter == null) {
+                rvAdapter = new RecordAdapter(record, this);
+                setItemTouchedAdapter((ItemTouchedAdapter) rvAdapter);
+                rvRecordList.setAdapter(rvAdapter);
+            } else {
+                itemTouchedAdapter.onItemAdd(record);
+            }
+
+            pbSpinner.setVisibility(View.GONE);
+            isLoading = false;
         }
     }
 
+    private void clearRecords() {
+        if (itemTouchedAdapter != null) {
+            itemTouchedAdapter.clearData();
+        }
+    }
 
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
@@ -165,12 +202,17 @@ public class RecordFragment extends Fragment {
 
     @OnEditorAction(R.id.etSearch)
     protected boolean etSearchEditor(int action) {
-        Log.d("ACTION_BUTTON", String.valueOf(action));
         if (action == EditorInfo.IME_ACTION_DONE) {
             ibtnSearchClick();
         }
         return true;
     }
 
-
+    @Override
+    public void listItemClicked(int position) {
+        AddRecordingDialog addRecordingDialog = new AddRecordingDialog();
+        addRecordingDialog.setAdapter(itemTouchedAdapter);
+        addRecordingDialog.setRecordingPosition(position);
+        addRecordingDialog.show(getActivity().getSupportFragmentManager(), "AddRecordingDialog");
+    }
 }

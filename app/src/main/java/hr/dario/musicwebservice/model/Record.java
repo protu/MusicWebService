@@ -2,15 +2,12 @@
 package hr.dario.musicwebservice.model;
 
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import hr.dario.musicwebservice.R;
+import java.util.List;
 
-public class Record  {
+public class Record {
 
     @SerializedName("created")
     @Expose
@@ -59,6 +56,20 @@ public class Record  {
 
     public void removeRecording(int recPosition) {
         recordings.remove(recPosition);
+    }
+
+    public void addRecordings(List<Recording> recordings) {
+        this.recordings.addAll(recordings);
+    }
+
+    public Recording getRecording(int recPosition) {
+        return recordings.get(recPosition);
+    }
+
+    public void clearData() {
+        recordings.clear();
+        setCount(0);
+        setOffset(0);
     }
 
     @Override
