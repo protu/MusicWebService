@@ -34,7 +34,7 @@ public class AddRecordingDialog extends DialogFragment {
         builder.setMessage(adapter.getRecordingItem(position).toString());
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getActivity(), RecordingIntentService.class);

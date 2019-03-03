@@ -12,6 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +41,7 @@ import hr.dario.musicwebservice.ui.dialog.AddRecordingDialog;
 import hr.dario.musicwebservice.ui.views.RecordViewModel;
 import hr.dario.musicwebservice.util.RecordingIntentService;
 
+import static hr.dario.musicwebservice.R.menu.menu_recordings;
 import static hr.dario.musicwebservice.util.AppConst.LIMIT;
 
 
@@ -78,6 +83,7 @@ public class RecordFragment extends Fragment implements OnListItemClickListener 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.records_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setHasOptionsMenu(true);
         RecyclerView.LayoutManager rvLayout;
         rvLayout = new LinearLayoutManager(getContext());
         rvRecordList.setLayoutManager(rvLayout);
@@ -214,5 +220,20 @@ public class RecordFragment extends Fragment implements OnListItemClickListener 
         addRecordingDialog.setAdapter(itemTouchedAdapter);
         addRecordingDialog.setRecordingPosition(position);
         addRecordingDialog.show(getActivity().getSupportFragmentManager(), "AddRecordingDialog");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(menu_recordings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.actionClear) {
+            itemTouchedAdapter.clearData();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

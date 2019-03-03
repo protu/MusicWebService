@@ -15,4 +15,7 @@
     <string name="sh_record_from">showing records from</string>
     <string name="to">to</string>
     <string name="add_recording">Add recording</string>
+    <string name="share">Share</string>
+    <string name="clear_all">Clear all</string>
+    <string name="exit">Exit</string>
 </resources>

@@ -15,4 +15,7 @@
     <string name="sh_record_from">prikazuje od</string>
     <string name="to">do</string>
     <string name="add_recording">Dodaj pjesmu</string>
+    <string name="share">Dijeli</string>
+    <string name="clear_all">Obriši sve</string>
+    <string name="exit">Izlaz</string>
 </resources>

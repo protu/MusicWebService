@@ -11,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,6 +27,8 @@ import hr.dario.musicwebservice.ui.dialog.DeleteRecordListener;
 import hr.dario.musicwebservice.ui.dialog.DeleteRecordingDialog;
 
 import static hr.dario.musicwebservice.MusicWebServiceApp.database;
+import static hr.dario.musicwebservice.R.menu.menu_playlist;
+import static hr.dario.musicwebservice.R.menu.menu_recordings;
 import static hr.dario.musicwebservice.util.AppConst.RECORDING_UPDATE;
 
 public class PlayListFragment extends Fragment implements DeleteRecordListener, OnListItemClickListener {
@@ -42,7 +47,7 @@ public class PlayListFragment extends Fragment implements DeleteRecordListener, 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.playlist_fragment, container, false);
         ButterKnife.bind(this, rootView);
-
+        setHasOptionsMenu(true);
         adapter = new PlaylistRecordAdapter(database.recTable().selectAll(), this);
         RecyclerView.LayoutManager rvLayout;
         rvLayout = new LinearLayoutManager(getContext());
@@ -97,5 +102,17 @@ public class PlayListFragment extends Fragment implements DeleteRecordListener, 
         deleteRecordingDialog.setListener(this);
         deleteRecordingDialog.setDbRecording(database.recTable().selectAll().get(position));
         deleteRecordingDialog.show(getActivity().getSupportFragmentManager(), "DeleteRecordDialog");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(menu_playlist, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
     }
 }
