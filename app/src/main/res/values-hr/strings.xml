@@ -18,4 +18,6 @@
     <string name="share">Dijeli</string>
     <string name="clear_all">Obriši sve</string>
     <string name="exit">Izlaz</string>
+    <string name="clear_all_warn">Izbrisat će se cijeli popis! Jeste li sigurni?</string>
+    <string name="play_list">Play lista</string>
 </resources>

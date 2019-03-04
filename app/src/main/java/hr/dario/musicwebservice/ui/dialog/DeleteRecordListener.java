@@ -5,4 +5,6 @@ import hr.dario.musicwebservice.db.model.DbRecording;
 public interface DeleteRecordListener {
 
     void deleteRecordDialogActionPerformed(DbRecording dbRecording);
+
+    void deleteAllRecordsDialogActionPerfomed();
 }

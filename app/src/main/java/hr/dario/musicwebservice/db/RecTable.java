@@ -22,5 +22,8 @@ public interface RecTable {
     @Delete
     void delete(DbRecording recordings);
 
+    @Query("DELETE FROM DbRecording")
+    void deleteAll();
+
 
 }

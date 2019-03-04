@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,12 +25,12 @@ import hr.dario.musicwebservice.R;
 import hr.dario.musicwebservice.db.model.DbRecording;
 import hr.dario.musicwebservice.ui.adapters.OnListItemClickListener;
 import hr.dario.musicwebservice.ui.adapters.PlaylistRecordAdapter;
+import hr.dario.musicwebservice.ui.dialog.DeleteAllRecordingDialog;
 import hr.dario.musicwebservice.ui.dialog.DeleteRecordListener;
 import hr.dario.musicwebservice.ui.dialog.DeleteRecordingDialog;
 
 import static hr.dario.musicwebservice.MusicWebServiceApp.database;
 import static hr.dario.musicwebservice.R.menu.menu_playlist;
-import static hr.dario.musicwebservice.R.menu.menu_recordings;
 import static hr.dario.musicwebservice.util.AppConst.RECORDING_UPDATE;
 
 public class PlayListFragment extends Fragment implements DeleteRecordListener, OnListItemClickListener {
@@ -41,6 +43,8 @@ public class PlayListFragment extends Fragment implements DeleteRecordListener, 
 
     private PlaylistRecordAdapter adapter;
     private BroadcastReceiver breceiver;
+    private Intent shareIntent;
+    private ShareActionProvider shareActionProvider;
 
     @Nullable
     @Override
@@ -97,6 +101,12 @@ public class PlayListFragment extends Fragment implements DeleteRecordListener, 
     }
 
     @Override
+    public void deleteAllRecordsDialogActionPerfomed() {
+        database.recTable().deleteAll();
+        updateUi();
+    }
+
+    @Override
     public void listItemClicked(int position) {
         DeleteRecordingDialog deleteRecordingDialog = new DeleteRecordingDialog();
         deleteRecordingDialog.setListener(this);
@@ -107,12 +117,42 @@ public class PlayListFragment extends Fragment implements DeleteRecordListener, 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(menu_playlist, menu);
+
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.actionShare));
+        shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.play_list);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getAllRecordings());
+        shareActionProvider.setShareIntent(shareIntent);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        int i = item.getItemId();
+        if (i == R.id.actionClear) {
+            DeleteAllRecordingDialog deleteAllRecordingDialog = new DeleteAllRecordingDialog();
+            deleteAllRecordingDialog.setListener(this);
+            deleteAllRecordingDialog.show(getActivity().getSupportFragmentManager(), "DeleteAllRecordDialog");
+        } else if (i == R.id.actionShare) {
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.play_list);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getAllRecordings());
+            shareActionProvider.setShareIntent(shareIntent);
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String getAllRecordings() {
+        StringBuilder sb = new StringBuilder();
+        for (DbRecording recording : database.recTable().selectAll()) {
+            sb.append(recording.getTitle());
+            sb.append(";");
+            sb.append(recording.getArtistCredit());
+            sb.append(";");
+            sb.append(recording.getRelease());
+            sb.append(System.getProperty("line.separator"));
+        }
+        return sb.toString();
     }
 }

@@ -18,4 +18,6 @@
     <string name="share">Share</string>
     <string name="clear_all">Clear all</string>
     <string name="exit">Exit</string>
+    <string name="clear_all_warn">This will clear all your recordings! Are you shure?</string>
+    <string name="play_list">Play list</string>
 </resources>
