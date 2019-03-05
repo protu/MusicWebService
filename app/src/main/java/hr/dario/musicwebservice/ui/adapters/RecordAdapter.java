@@ -3,7 +3,6 @@ package hr.dario.musicwebservice.ui.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,8 +115,10 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
 
     @Override
     public void clearData() {
-        this.record.clearData();
-        notifyDataSetChanged();
+        if (this.record != null) {
+            this.record.clearData();
+            notifyDataSetChanged();
+        }
     }
 
     @Override

@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -232,7 +231,9 @@ public class RecordFragment extends Fragment implements OnListItemClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.actionClear) {
-            itemTouchedAdapter.clearData();
+            if (itemTouchedAdapter != null) {
+                itemTouchedAdapter.clearData();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
